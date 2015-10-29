@@ -4,7 +4,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Generics.Simple (
-
   -- * meta information
   datatype,
   Datatype(..),
@@ -36,10 +35,12 @@ datatype Proxy = datatypeC (Proxy :: Proxy (Rep a))
 class HasEot a where
   type Eot a :: *
   toEot :: a -> Eot a
+  fromEot :: Eot a -> a
 
 instance (Generic a, ImpliedByGeneric a c f) => HasEot a where
   type Eot a = EotG (Rep a)
   toEot = toEotG . from
+  fromEot = to . fromEotG
 
 type family ImpliedByGeneric a c f :: Constraint where
   ImpliedByGeneric a c f =

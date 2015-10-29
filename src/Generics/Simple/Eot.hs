@@ -23,12 +23,14 @@ import           GHC.Generics
 class HasEotG (a :: * -> *) where
   type EotG a :: *
   toEotG :: a x -> EotG a
+  fromEotG :: EotG a -> a x
 
 -- * datatype
 
 instance HasEotG f => HasEotG (D1 c f) where
   type EotG (D1 c f) = EotG f
   toEotG (M1 x) = toEotG x
+  fromEotG x = fromEotG x
 
 -- * constructors
 

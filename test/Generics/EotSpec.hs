@@ -3,12 +3,13 @@
 module Generics.EotSpec where
 
 import           Test.Hspec
+import           Test.QuickCheck
 
 import           Generics.Simple
 
 spec :: Spec
 spec = do
-  describe "from" $ do
+  describe "toEot" $ do
     it "works" $ do
       toEot (A 42 "foo" True ()) `shouldBe`
         Left (42, ("foo", (True, ((), ()))))
@@ -24,6 +25,13 @@ spec = do
           _foo = toEot C
       True
 
+  describe "fromEot" $ do
+    it "is the inverse of toEot" $ do
+      property $ \ eot -> do
+        let a :: Test
+            a = fromEot eot
+        toEot a `shouldBe` eot
+
 data Test
   = A Int String Bool ()
   | B Bool
@@ -33,3 +41,5 @@ data Test
 
 data Foo = Foo
   deriving (Generic)
+
+instance Arbitrary Void where
