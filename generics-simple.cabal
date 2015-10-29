@@ -1,0 +1,65 @@
+-- This file has been generated from package.yaml by hpack version 0.5.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           generics-simple
+version:        0.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
+
+library
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Werror -fno-warn-name-shadowing
+  build-depends:
+      base
+  exposed-modules:
+      Generics.Simple
+  other-modules:
+      Generics.Simple.Datatype
+      Generics.Simple.Eot
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+    , src
+    , examples
+  ghc-options: -Wall -Werror -fno-warn-name-shadowing
+  build-depends:
+      base
+    , hspec
+  other-modules:
+      Examples.ToStringSpec
+      Generics.DatatypeSpec
+      Generics.EotSpec
+      Generics.Simple
+      Generics.Simple.Datatype
+      Generics.Simple.Eot
+      ToString
+  default-language: Haskell2010
+
+test-suite quickcheck
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test/quickcheck
+    , src
+  ghc-options: -Wall -Werror -fno-warn-name-shadowing
+  build-depends:
+      base
+    , hspec
+    , mockery
+    , interpolate
+    , shake
+    , directory
+    , filepath
+    , QuickCheck
+  other-modules:
+      DatatypeSpec
+      Generics.Simple
+      Generics.Simple.Datatype
+      Generics.Simple.Eot
+  default-language: Haskell2010

@@ -1,0 +1,35 @@
+dependencies:
+  - base
+
+ghc-options:
+  "-Wall -Werror -fno-warn-name-shadowing"
+
+library:
+  exposed-modules:
+    - Generics.Simple
+  source-dirs:
+    - src
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs:
+      - test
+      - src
+      - examples
+    dependencies:
+      - hspec
+
+  quickcheck:
+    main: Spec.hs
+    source-dirs:
+      - test/quickcheck
+      - src
+    dependencies:
+      - hspec
+      - mockery
+      - interpolate
+      - shake
+      - directory
+      - filepath
+      - QuickCheck
