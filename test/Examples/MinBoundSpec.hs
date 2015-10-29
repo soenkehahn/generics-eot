@@ -8,6 +8,7 @@ import           Test.Hspec
 import           Generics.Eot
 import           MinBound
 
+spec :: Spec
 spec = do
   describe "minBoundG" $ do
     it "works" $ do

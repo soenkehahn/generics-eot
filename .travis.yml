@@ -1,0 +1,27 @@
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - libgmp-dev
+
+env:
+  - STACK_YAML=stack.yaml
+
+install:
+  # stack
+  - mkdir -p ~/.local/bin
+  - travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v0.1.4.0/stack-0.1.4.0-x86_64-linux.tar.gz | tar -xvzf -
+  - mv stack ~/.local/bin
+  - export PATH=~/.local/bin:$PATH
+  - stack --version
+
+script:
+  - stack setup
+  - stack build --ghc-options -Werror
+  - stack test --ghc-options -Werror
+
+
+cache:
+  directories:
+    - $HOME/.stack

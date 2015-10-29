@@ -4,6 +4,8 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Generics.EotSpec where
 
 import           Test.Hspec
@@ -42,7 +44,8 @@ spec = do
             eot = toEot a
         fromEot eot `shouldBe` a
 
-instance Arbitrary Void
+instance Arbitrary Void where
+  arbitrary = error "please, don't do this!"
 
 class IsVoid a where
   isVoid :: a -> Bool

@@ -26,7 +26,7 @@ import           Test.Hspec.QuickCheck
 import           Test.Mockery.Directory
 import           Test.QuickCheck
 
-import           Generics.Simple
+import           Generics.Eot
 
 spec :: Spec
 spec = modifyMaxSize (const 20) $ do
@@ -35,7 +35,7 @@ spec = modifyMaxSize (const 20) $ do
       property $ \ dt -> test dt [i|
         {-# LANGUAGE DeriveGeneric #-}
 
-        import Generics.Simple
+        import Generics.Eot
 
         main = print $ datatype (Proxy :: Proxy #{datatypeName dt})
 
@@ -50,7 +50,7 @@ spec = modifyMaxSize (const 20) $ do
           {-# LANGUAGE DeriveGeneric #-}
           {-# LANGUAGE StandaloneDeriving #-}
 
-          import Generics.Simple
+          import Generics.Eot
           import Control.Monad
 
           import ToString
@@ -144,7 +144,7 @@ allLetters :: [Char]
 allLetters = lowerCase ++ upperCase
 
 arbitraryLowerName :: Gen String
-arbitraryLowerName = do
+arbitraryLowerName = flip suchThat (not . isKeyword) $ do
   first <- elements lowerCase
   (first :) <$> listOf (elements allLetters)
 
@@ -152,8 +152,14 @@ shrinkLowerName :: String -> [String]
 shrinkLowerName s =
   filter isValid (shrink s)
   where
-    isValid (s : _) = isLower s
+    isValid w@(s : _) = isLower s && not (isKeyword w)
     isValid [] = False
+
+isKeyword :: String -> Bool
+isKeyword s = s `elem` keywords
+  where
+    keywords =
+      words "case class data default deriving do else foreign if import in infix infixl infixr instance let module newtype of then type where"
 
 arbitraryUpperName :: Gen String
 arbitraryUpperName = do
