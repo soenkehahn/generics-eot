@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Generics.Simple (
+module Generics.Eot (
   -- * meta information
   datatype,
   Datatype(..),
@@ -25,8 +25,8 @@ import           Data.Proxy
 import           GHC.Exts (Constraint)
 import           GHC.Generics hiding (Datatype, Constructor)
 
-import           Generics.Simple.Datatype
-import           Generics.Simple.Eot
+import           Generics.Eot.Datatype
+import           Generics.Eot.Eot
 
 datatype :: forall a c f . (Generic a, ImpliedByGeneric a c f) =>
   Proxy a -> Datatype

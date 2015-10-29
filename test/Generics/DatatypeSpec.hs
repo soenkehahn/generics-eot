@@ -5,7 +5,7 @@ module Generics.DatatypeSpec where
 import qualified GHC.Generics as GHC
 import           Test.Hspec hiding (Selector)
 
-import           Generics.Simple
+import           Generics.Eot
 
 data TestType
   = A

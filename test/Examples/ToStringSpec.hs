@@ -5,7 +5,7 @@ module Examples.ToStringSpec where
 
 import           Test.Hspec
 
-import           Generics.Simple
+import           Generics.Eot
 import           ToString
 
 data Test

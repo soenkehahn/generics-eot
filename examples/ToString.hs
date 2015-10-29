@@ -5,7 +5,7 @@
 module ToString (ToString(..)) where
 
 import           Data.List
-import           Generics.Simple
+import           Generics.Eot
 
 class ToString a where
   toString :: a -> String
@@ -48,7 +48,7 @@ instance (ToStringFields a, ToStringG b) => ToStringG (Either a b) where
   toStringConss [] _ = error "impossible"
 
 instance ToStringG Void where
-  toStringConss = error "impossible"
+  toStringConss _ void = seq void (error "impossible")
 
 class ToStringFields a where
   toStringFields :: a -> [String]

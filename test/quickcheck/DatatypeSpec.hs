@@ -193,4 +193,3 @@ instance Arbitrary Fields where
     Selectors fs ->
       NoSelectors (length fs) :
       nub (map Selectors (shrinkList shrinkLowerName fs))
-

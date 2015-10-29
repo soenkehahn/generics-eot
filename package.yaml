@@ -4,11 +4,11 @@ dependencies:
   - base
 
 ghc-options:
-  "-Wall -Werror -fno-warn-name-shadowing"
+  "-Wall -fno-warn-name-shadowing"
 
 library:
   exposed-modules:
-    - Generics.Simple
+    - Generics.Eot
   source-dirs:
     - src
 
@@ -21,6 +21,7 @@ tests:
       - examples
     dependencies:
       - hspec
+      - QuickCheck
 
   quickcheck:
     main: Spec.hs

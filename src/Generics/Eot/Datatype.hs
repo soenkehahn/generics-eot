@@ -9,7 +9,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Generics.Simple.Datatype where
+module Generics.Eot.Datatype where
 
 import           Data.Maybe
 import           Data.Proxy

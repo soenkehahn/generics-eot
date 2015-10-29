@@ -1,11 +1,15 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Generics.EotSpec where
 
 import           Test.Hspec
 import           Test.QuickCheck
 
-import           Generics.Simple
+import           Generics.Eot
 
 spec :: Spec
 spec = do
@@ -27,19 +31,44 @@ spec = do
 
   describe "fromEot" $ do
     it "is the inverse of toEot" $ do
-      property $ \ eot -> do
+      property $ \ eot -> not (isVoid eot) ==> do
         let a :: Test
             a = fromEot eot
         toEot a `shouldBe` eot
+
+    it "the other way around" $ do
+      property $ \ (a :: Test) -> do
+        let eot :: Eot Test
+            eot = toEot a
+        fromEot eot `shouldBe` a
+
+instance Arbitrary Void
+
+class IsVoid a where
+  isVoid :: a -> Bool
+
+instance IsVoid (Either b c) => IsVoid (Either a (Either b c)) where
+  isVoid = \ case
+    Left _ -> False
+    Right bc -> isVoid bc
+
+instance IsVoid (Either a Void) where
+  isVoid = either (const False) (const True)
 
 data Test
   = A Int String Bool ()
   | B Bool
   | C
   | D
-  deriving (Generic)
+  deriving (Generic, Show, Eq)
+
+instance Arbitrary Test where
+  arbitrary = oneof $
+    (A <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary) :
+    (B <$> arbitrary) :
+    (pure C) :
+    (pure D) :
+    []
 
 data Foo = Foo
   deriving (Generic)
-
-instance Arbitrary Void where
