@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -11,38 +12,36 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Generics.Simple.Eot where
+module Generics.Simple.Eot (
+  HasEotG(..),
+  Void,
+  ) where
 
 import           Data.Proxy
 import           GHC.Generics
 
+class HasEotG (a :: * -> *) where
+  type EotG a :: *
+  toEotG :: a x -> EotG a
+
 -- * datatype
 
-class EotC (a :: * -> *) where
-  type Eot a :: *
-  toEotDatatype :: a x -> Eot a
-
-instance (EotConssC f) => EotC (D1 c f) where
-  type Eot (D1 c f) = EotConss f
-  -- fixme: remove Eot?
-  toEotDatatype (M1 x) = toEotConss x
+instance HasEotG f => HasEotG (D1 c f) where
+  type EotG (D1 c f) = EotG f
+  toEotG (M1 x) = toEotG x
 
 -- * constructors
 
-class EotConssC (a :: * -> *) where
-  type EotConss a :: *
-  toEotConss :: a x -> EotConss a
+instance (HasEotG a, HasEotG b, Normalize (EotG a) (EotG b)) =>
+  HasEotG (a :+: b) where
+    type EotG (a :+: b) = GEither (EotG a) (EotG b)
+    toEotG = \ case
+      L1 a -> gLeft (toEotG a) (Proxy :: Proxy (EotG b))
+      R1 b -> gRight (Proxy :: Proxy (EotG a)) (toEotG b)
 
-instance (EotConssC a, EotConssC b, Normalize (EotConss a) (EotConss b)) =>
-  EotConssC (a :+: b) where
-    type EotConss (a :+: b) = GEither (EotConss a) (EotConss b)
-    toEotConss = \ case
-      L1 a -> gLeft (toEotConss a) (Proxy :: Proxy (EotConss b))
-      R1 b -> gRight (Proxy :: Proxy (EotConss a)) (toEotConss b)
-
-instance EotFieldsC f => EotConssC (C1 c f) where
-  type EotConss (C1 c f) = Either (EotFields f) Void
-  toEotConss = Left . toEotFields . unM1
+instance EotFieldsC f => HasEotG (C1 c f) where
+  type EotG (C1 c f) = Either (EotFields f) Void
+  toEotG = Left . toEotFields . unM1
 
 data Void
   deriving (Generic)
@@ -51,9 +50,9 @@ deriving instance Show Void
 deriving instance Eq Void
 deriving instance Ord Void
 
-instance EotConssC V1 where
-  type EotConss V1 = Void
-  toEotConss = error "fixme: impossible"
+instance HasEotG V1 where
+  type EotG V1 = Void
+  toEotG = error "fixme: impossible"
 
 -- * GEither
 

@@ -1,20 +1,24 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Generics.Simple (
+
+  -- * meta information
   datatype,
   Datatype(..),
   Constructor(..),
   Fields(..),
 
-  toEot,
-  Eot,
+  -- * converting values
+  HasEot(..),
   Void,
 
   ImpliedByGeneric,
 
+  -- * re-exports
   Generic,
-  Rep, -- fixme
   Proxy(..),
   ) where
 
@@ -29,12 +33,17 @@ datatype :: forall a c f . (Generic a, ImpliedByGeneric a c f) =>
   Proxy a -> Datatype
 datatype Proxy = datatypeC (Proxy :: Proxy (Rep a))
 
-toEot :: (Generic a, ImpliedByGeneric a c f) => a -> Eot (Rep a)
-toEot = toEotDatatype . from
+class HasEot a where
+  type Eot a :: *
+  toEot :: a -> Eot a
+
+instance (Generic a, ImpliedByGeneric a c f) => HasEot a where
+  type Eot a = EotG (Rep a)
+  toEot = toEotG . from
 
 type family ImpliedByGeneric a c f :: Constraint where
   ImpliedByGeneric a c f =
     (GenericDatatype (Rep a),
      Rep a ~ D1 c f,
      GenericConstructors f,
-     EotC (Rep a))
+     HasEotG (Rep a))

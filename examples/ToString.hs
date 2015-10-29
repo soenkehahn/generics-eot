@@ -9,7 +9,7 @@ import           Generics.Simple
 
 class ToString a where
   toString :: a -> String
-  default toString :: (Generic a, ImpliedByGeneric a c f, ToStringG (Eot (Rep a))) =>
+  default toString :: (Generic a, ImpliedByGeneric a c f, ToStringG (Eot a)) =>
     a -> String
   toString = toStringG
 
@@ -22,7 +22,7 @@ instance ToString Int where
 instance ToString () where
   toString = show
 
-toStringG :: forall a c f . (Generic a, ImpliedByGeneric a c f, ToStringG (Eot (Rep a))) =>
+toStringG :: forall a c f . (Generic a, ImpliedByGeneric a c f, ToStringG (Eot a)) =>
   a -> String
 toStringG a =
   toStringConss
@@ -45,10 +45,10 @@ instance (ToStringFields a, ToStringG b) => ToStringG (Either a b) where
         NoFields -> ""
   toStringConss (_ : r) (Right next) =
     toStringConss r next
-  toStringConss [] _ = error "fixme: impossible"
+  toStringConss [] _ = error "impossible"
 
 instance ToStringG Void where
-  toStringConss = error "fixme: impossible"
+  toStringConss = error "impossible"
 
 class ToStringFields a where
   toStringFields :: a -> [String]
