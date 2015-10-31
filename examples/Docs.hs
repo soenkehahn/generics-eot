@@ -11,8 +11,7 @@ import           Data.String.Interpolate
 import           Data.Typeable
 import           Generics.Eot
 
-docs :: forall a c f . (Generic a, ImpliedByGeneric a c f, GDocs Datatype (Eot a)) =>
-  Proxy a -> String
+docs :: forall a . (HasEot a, GDocs Datatype (Eot a)) => Proxy a -> String
 docs Proxy = unlines $ gDocs
   (datatype (Proxy :: Proxy a))
   (Proxy :: Proxy (Eot a))

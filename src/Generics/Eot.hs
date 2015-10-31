@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -5,7 +6,6 @@
 
 module Generics.Eot (
   -- * meta information
-  datatype,
   Datatype(..),
   Constructor(..),
   Fields(..),
@@ -13,8 +13,6 @@ module Generics.Eot (
   -- * converting values
   HasEot(..),
   Void,
-
-  ImpliedByGeneric,
 
   -- * re-exports
   Generic,
@@ -28,19 +26,17 @@ import           GHC.Generics hiding (Datatype, Constructor)
 import           Generics.Eot.Datatype
 import           Generics.Eot.Eot
 
-datatype :: forall a c f . (Generic a, ImpliedByGeneric a c f) =>
-  Proxy a -> Datatype
-datatype Proxy = datatypeC (Proxy :: Proxy (Rep a))
-
 class HasEot a where
   type Eot a :: *
   toEot :: a -> Eot a
   fromEot :: Eot a -> a
+  datatype :: Proxy a -> Datatype
 
 instance (Generic a, ImpliedByGeneric a c f) => HasEot a where
   type Eot a = EotG (Rep a)
   toEot = toEotG . from
   fromEot = to . fromEotG
+  datatype Proxy = datatypeC (Proxy :: Proxy (Rep a))
 
 type family ImpliedByGeneric a c f :: Constraint where
   ImpliedByGeneric a c f =

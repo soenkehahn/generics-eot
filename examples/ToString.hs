@@ -9,8 +9,7 @@ import           Generics.Eot
 
 class ToString a where
   toString :: a -> String
-  default toString :: (Generic a, ImpliedByGeneric a c f, ToStringG (Eot a)) =>
-    a -> String
+  default toString :: (HasEot a, ToStringG (Eot a)) => a -> String
   toString = toStringG
 
 instance ToString Bool where
@@ -22,8 +21,7 @@ instance ToString Int where
 instance ToString () where
   toString = show
 
-toStringG :: forall a c f . (Generic a, ImpliedByGeneric a c f, ToStringG (Eot a)) =>
-  a -> String
+toStringG :: forall a . (HasEot a, ToStringG (Eot a)) => a -> String
 toStringG a =
   toStringConss
     (constructors (datatype (Proxy :: Proxy a)))

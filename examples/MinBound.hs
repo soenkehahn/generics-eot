@@ -4,7 +4,7 @@ module MinBound (minBoundG) where
 
 import           Generics.Eot
 
-minBoundG :: (Generic a, ImpliedByGeneric a c f, GMinBound (Eot a)) => a
+minBoundG :: (HasEot a, GMinBound (Eot a)) => a
 minBoundG = fromEot gMinBound
 
 class GMinBound a where
