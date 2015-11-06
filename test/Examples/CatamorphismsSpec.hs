@@ -9,6 +9,7 @@ import           Test.Hspec
 
 import           Catamorphisms
 
+spec :: Spec
 spec = do
   describe "catamorphism" $ do
     it "works for one constructor, no fields" $ do
