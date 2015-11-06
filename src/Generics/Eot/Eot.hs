@@ -57,6 +57,7 @@ instance HasFieldsG f => HasConstructorsG (C1 c f) where
     Left fields -> M1 $ fromEotFields fields
     Right void -> seq void (error "impossible")
 
+-- | Uninhabited type.
 data Void
   deriving (Generic)
 

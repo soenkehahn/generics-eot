@@ -16,9 +16,10 @@ import           Data.Proxy
 import qualified GHC.Generics as GHC
 import           GHC.Generics hiding (Datatype(..), Constructor(..))
 
+-- | Type for meta information about ADTs.
 data Datatype
   = Datatype {
-    datatypeName :: String,
+    datatypeName :: String, -- ^ unqualified name of the type
     constructors :: [Constructor]
   }
   deriving (Show, Eq)
@@ -30,12 +31,17 @@ data Constructor
   }
   deriving (Show, Eq)
 
+-- | Type that represents meta information about fields of one
+-- constructor.
 data Fields
   = Selectors [String]
+    -- ^ Record constructor, containing the list of the selector names.
   | NoSelectors Int
+    -- ^ Constructor with fields, but without selector names.
+    -- The argument gives the number of fields.
   | NoFields
+    -- ^ Constructor without fields.
   deriving (Show, Eq)
-
 
 -- * datatype
 
