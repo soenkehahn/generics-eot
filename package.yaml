@@ -9,6 +9,7 @@ ghc-options:
 library:
   exposed-modules:
     - Generics.Eot
+    - Generics.Eot.Tutorial
   source-dirs:
     - src
 
@@ -23,6 +24,7 @@ tests:
       - hspec
       - QuickCheck
       - interpolate
+      - doctest
 
   quickcheck:
     main: Spec.hs
