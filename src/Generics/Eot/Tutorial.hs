@@ -138,7 +138,7 @@ instance (EotSerialize this, EotSerialize rest) =>
 --     'Void' cannot be constructed.
 
 instance EotSerialize Void where
-  eotSerialize n void = seq void $ error "impossible"
+  eotSerialize _ void = seq void $ error "impossible"
 
 -- $
 -- - @(x, xs)@:
@@ -222,6 +222,7 @@ instance (EotDeserialize this, EotDeserialize next) =>
 
   eotDeserialize (0 : r) = Left $ eotDeserialize r
   eotDeserialize (n : r) = Right $ eotDeserialize (pred n : r)
+  eotDeserialize [] = error "invalid input"
 
 instance EotDeserialize Void where
   eotDeserialize _ = error "invalid input"
@@ -232,9 +233,11 @@ instance (Deserialize x, EotDeserialize xs) =>
   eotDeserialize (len : r) =
     let (this, rest) = splitAt len r
     in (deserialize this, eotDeserialize rest)
+  eotDeserialize [] = error "invalid input"
 
 instance EotDeserialize () where
   eotDeserialize [] = ()
+  eotDeserialize (_ : _) = error "invalid input"
 
 -- $ And here's the 'Deserialize' plus all instances to deserialize the fields:
 
@@ -243,16 +246,19 @@ class Deserialize a where
 
 instance Deserialize Int where
   deserialize [n] = n
+  deserialize _ = error "invalid input"
 
 instance Deserialize String where
   deserialize = map chr
 
 instance Deserialize () where
   deserialize [] = ()
+  deserialize (_ : _) = error "invalid input"
 
 instance Deserialize Bool where
   deserialize [0] = False
   deserialize [1] = True
+  deserialize _ = error "invalid input"
 
 -- | And here's 'genericDeserialize' to tie it together. It uses
 -- 'eotDeserialize' to convert a list of 'Int's into an eot value and then
