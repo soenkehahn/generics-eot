@@ -1,3 +1,4 @@
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -17,7 +18,8 @@
 --    Example: Deserialization from a binary format.
 --
 -- Sometimes only one of the three forms is used but often multiple have to
--- be combined. For example serialization to JSON requires both 'datatype' and
+-- be combined. For example serialization to JSON usually
+-- requires both 'datatype' and
 -- 'toEot'.
 
 module Generics.Eot.Tutorial where
@@ -90,17 +92,18 @@ data B = B1 Int | B2 String Bool | B3
 -- isomorphic representation
 -- @'Eot' a@ with 'toEot' and we can convert in the other direction with
 -- 'fromEot'. Generic functions always operate on these isomorphic
--- representations and then convert from or to the real ADTs.
+-- representations and then convert from or to the real ADTs with 'fromEot' and
+-- 'toEot'.
 --
 -- These generic isomorphic types are referred to as "eot" -- short for
--- "'Either's of tuples" -- in the rest of this tutorial.
+-- "'Either's of tuples".
 
 -- * 2nd Example: Deconstructing Values: Serialization
 
 -- $ We start by writing a function that operates on the eot representations.
 -- The eot representations follow simple patterns and always look similar, but
--- they don't look exactly the same. For this reason we have to use a type
--- class:
+-- they don't look exactly the same for different ADTs.
+-- For this reason we have to use a type class:
 
 class EotSerialize eot where
   eotSerialize :: Int -- ^ The number of the constructor being passed in
@@ -125,11 +128,11 @@ class EotSerialize eot where
 --     @this@ and @rest@. If we write the correct instances for all eot types
 --     these constraints should always be fulfilled.
 
-instance (EotSerialize this, EotSerialize rest) =>
-  EotSerialize (Either this rest) where
+instance (EotSerialize this, EotSerialize next) =>
+  EotSerialize (Either this next) where
 
   eotSerialize n (Left fields) = n : eotSerialize n fields
-  eotSerialize n (Right rest) = eotSerialize (succ n) rest
+  eotSerialize n (Right next) = eotSerialize (succ n) next
 
 -- $
 -- - 'Void':
@@ -175,6 +178,8 @@ instance EotSerialize () where
 -- used ADTs, so we need instances for all of them.
 class Serialize a where
   serialize :: a -> [Int]
+  default serialize :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
+  serialize = genericSerialize
 
 instance Serialize Int where
   serialize i = [i]
@@ -278,6 +283,108 @@ genericDeserialize = fromEot . eotDeserialize
 -- >>> (genericDeserialize $ genericSerialize $ A1 "foo" 42) :: A
 -- A1 {foo = "foo", bar = 42}
 
+-- * Meta Data with types
+
+-- $ todo
+
 -- * DefaultSignatures
 
--- * Meta Data with types
+-- $ There is a ghc language extension called @DefaultSignatures@ (see fixme
+-- link). In itself it has little to do with generic programming, but it makes
+-- a good companion.
+
+-- ** How they work:
+
+-- $ Imagine you have a type class called @ToString@ which allows to convert
+-- values to 'String's:
+
+class ToString a where
+  toString :: a -> String
+  default toString :: Show a => a -> String
+  toString = show
+
+-- $ You can write instances manually, but you might be tempted to give the
+-- following default implementation for 'toString':
+--
+-- > toString = show
+--
+-- The idea is that then you can just write down an empty 'ToString' instance:
+--
+-- > instance ToString A
+--
+-- and you get to use 'toString' on values of type 'A' for free.
+--
+-- But that default implementation doesn't work, because in the class declaration
+-- we don't have an instance for @Show a@. ghc says:
+--
+-- > Could not deduce (Show a) arising from a use of ‘show’
+-- > from the context (ToString a)
+--
+-- One solution would be to make 'ToString' a subclass of 'Show', but then we
+-- cannot implement 'ToString' instances manually anymore for types that don't
+-- have a 'Show' instance. @DefaultSignatures@ provide a better solution. The
+-- extension allows you to further narrow down the type for your default
+-- implementation for class methods:
+--
+-- > class ToString a where
+-- >   toString :: a -> String
+-- >   default toString :: Show a => a -> String
+-- >   toString = show
+--
+-- Then writing down empty instances work for types that have a 'Show' instance:
+--
+-- > instance ToString Int
+
+instance ToString Int
+
+-- $ >>> toString (42 :: Int)
+-- "42"
+
+-- $ Note: if you write down an empty @ToString@ instances for a type that
+-- does not have a 'Show' instance, the error message looks like this:
+--
+-- > No instance for (Show noShow)
+--
+-- This might be confusing especially since haddock docs don't list the default
+-- signatures or implementations and users of the class might be wondering why
+-- 'Show' comes into play at all.
+
+-- ** How to use @DefaultSignatures@ for generic programming:
+
+-- $ @DefaultSignatures@ are especially handy when doing generic programming.
+-- Remember the type class 'Serialize' from the second example? Initially we
+-- used it to serialize the fields of our ADTs in the generic serialization
+-- through 'genericSerialize' and 'EotSerialize'. We just assumed that we would
+-- have a manual implementation for all field types. But with
+-- @DefaultSignatures@ we can now give a default implementation that uses
+-- 'genericSerialize':
+--
+-- > class Serialize a where
+-- >   serialize :: a -> [Int]
+-- >   default serialize :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
+-- >   serialize = genericSerialize
+--
+-- Note that the default implementation is given by 'genericSerialize' and has
+-- the same constraints.
+--
+-- Now we can write empty instances for custom ADTs:
+--
+-- > instance Serialize A
+
+instance Serialize A
+
+-- $ You could say that by giving this empty instance we give our blessing to
+-- use 'genericSerialize' for this type, but we don't have to actually implement
+-- anything. And it works:
+--
+-- >>> serialize (A1 "yay!" 42)
+-- [0,4,121,97,121,33,1,42]
+
+-- $ Important is that we still have the option to implement instances manually
+-- by
+-- overwriting the default implementation. This is needed for basic types like
+-- 'Int' and 'Char' that don't have useful generic representations. But it also
+-- allows to overwrite instances for ADTs manually. For example you may want
+-- a certain type to be serialized in a special way that deviates from the
+-- generic implementation or you may implement an instance manually for
+-- performance gain.
