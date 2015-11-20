@@ -2,8 +2,10 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 -- | This tutorial is meant to be read alongside with the haddock comments in
 -- 'Generics.Eot'.
@@ -26,6 +28,7 @@ module Generics.Eot.Tutorial where
 
 import           Data.Char
 import           Data.List
+import           Data.Typeable
 
 import           Generics.Eot
 
@@ -283,15 +286,125 @@ genericDeserialize = fromEot . eotDeserialize
 -- >>> (genericDeserialize $ genericSerialize $ A1 "foo" 42) :: A
 -- A1 {foo = "foo", bar = 42}
 
--- * Meta Data with types
+-- * 4th Example: Meta Information with types: generating SQL schemas
 
--- $ todo
+-- $ Accessing meta information __including__ the types works very
+-- similarly to deconstructing or constructing values. It uses the same
+-- structure of type classes and instances for the eot-types. The difference is:
+-- since we don't want actual values of our ADT as input or output we operate on
+-- 'Proxy's of our eot-types.
+--
+-- As an example we're going to implement a function that creates SQL statements
+-- that create tables that our ADTs would fit into. To be able to use nice names
+-- for the table and columns we're going to traverse the type-less meta
+-- information (see 1st example) at the same time.
+--
+-- (Note that the generated SQL statements are targeted at a fictional
+-- database implementation that magically understands Haskell types like
+-- 'Int' and 'String', or rather @['Char']@.)
+--
+-- Again we start off by writing a class that operates on the eot-types. Besides
+-- the eot-type the class has an additional parameter, @meta@, that will be
+-- instantiated by the corresponding types used for untyped meta information.
+
+class EotCreateTableStatement meta eot where
+  eotCreateTableStatement :: meta -> Proxy eot -> [String]
+
+-- $ Our first instances is for the complete datatype. @eot@ is instantiated to
+-- @'Either' fields 'Void'@. Note that this instance only works for ADTs with
+-- exactly one constructor as we don't support types with multiple constructors.
+-- @meta@ is instantiated to 'Datatype' which is the type for meta information
+-- for ADTs.
+
+instance EotCreateTableStatement [String] fields =>
+  EotCreateTableStatement Datatype (Either fields Void) where
+
+  eotCreateTableStatement (Datatype name [Constructor _ (Selectors fields)]) Proxy =
+    "CREATE TABLE " :
+    name :
+    " COLUMNS " :
+    "(" :
+    intercalate ", " (eotCreateTableStatement fields (Proxy :: Proxy fields)) :
+    ");" :
+    []
+  eotCreateTableStatement (Datatype _ [Constructor name (NoSelectors _)]) Proxy =
+    error ("constructor " ++ name ++ " has no selectors, this is not supported")
+
+-- $ The second instance is responsible for creating the parts of the SQL
+-- statements that declare the columns. As such it has to traverse the fields
+-- of our ADT. @eot@ is instantiated to the usual @(x, xs)@. @meta@ is
+-- instantiated to @['String']@, representing the field names. The name of the
+-- field type is obtained using 'typeRep', therefore we need a @'Typeable' x@
+-- constraint.
+
+instance (Typeable x, EotCreateTableStatement [String] xs) =>
+  EotCreateTableStatement [String] (x, xs) where
+
+  eotCreateTableStatement (field : fields) Proxy =
+    (field ++ " " ++ show (typeRep (Proxy :: Proxy x))) :
+    eotCreateTableStatement fields (Proxy :: Proxy xs)
+
+-- $ The last instances is for @()@. It's needed as the base case for
+-- traversing the fields and as such returns just an empty list.
+
+instance EotCreateTableStatement [String] () where
+  eotCreateTableStatement [] Proxy = []
+
+-- | 'createTableStatement' ties everything together. It obtaines the meta
+-- information through 'datatype' passing a proxy for @a@. And it creates a
+-- 'Proxy' for the eot-type:
+--
+-- > Proxy :: Proxy (Eot a)
+--
+-- Then it calls 'eotCreateTableStatement' and just 'concat's the resulting
+-- snippets.
+createTableStatement :: forall a . (HasEot a, EotCreateTableStatement Datatype (Eot a)) =>
+  Proxy a -> String
+createTableStatement proxy =
+  concat $ eotCreateTableStatement (datatype proxy) (Proxy :: Proxy (Eot a))
+
+-- $ As an example, we're going to use 'Person':
+
+data Person
+  = Person {
+    name :: String,
+    age :: Int
+  }
+  deriving (Generic)
+
+-- $ And here's the created SQL statement:
+--
+-- >>> putStrLn $ createTableStatement (Proxy :: Proxy Person)
+-- CREATE TABLE Person COLUMNS (name [Char], age Int);
+--
+-- If we try to use an ADT with multiple constructors, we get a type error
+-- due to a missing instance:
+--
+-- >>> putStrLn $ createTableStatement (Proxy :: Proxy A)
+-- <BLANKLINE>
+-- ...
+--     No instance for (EotCreateTableStatement
+--                        Datatype
+--                        (Either ([Char], (Int, ())) (Either (Int, (Bool, ())) Void)))
+--       arising from a use of ‘createTableStatement’
+-- ...
+--
+-- If we try to use it with an ADT with a single constructor but no selectors,
+-- we get a runtime error:
+
+data NoSelectors
+  = NotSupported Int Bool
+  deriving (Generic)
+
+-- $ >>> putStrLn $ createTableStatement (Proxy :: Proxy NoSelectors)
+-- *** Exception: constructor NotSupported has no selectors, this is not supported
 
 -- * DefaultSignatures
 
--- $ There is a ghc language extension called @DefaultSignatures@ (see fixme
--- link). In itself it has little to do with generic programming, but it makes
--- a good companion.
+-- $ There is a ghc language extension called @DefaultSignatures@
+-- (see https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-class-extensions.html#class-default-signatures ).
+-- In itself it has little to do with generic programming, but it makes a good
+-- companion.
 
 -- ** How they work:
 
@@ -368,23 +481,27 @@ instance ToString Int
 -- the same constraints.
 --
 -- Now we can write empty instances for custom ADTs:
---
--- > instance Serialize A
 
-instance Serialize A
+data C
+  = C1 Int String
+  deriving (Generic)
+
+-- $
+-- > instance Serialize C
+
+instance Serialize C
 
 -- $ You could say that by giving this empty instance we give our blessing to
 -- use 'genericSerialize' for this type, but we don't have to actually implement
 -- anything. And it works:
 --
--- >>> serialize (A1 "yay!" 42)
--- [0,4,121,97,121,33,1,42]
+-- >>> serialize (C1 42 "yay!")
+-- [0,1,42,4,121,97,121,33]
 
 -- $ Important is that we still have the option to implement instances manually
--- by
--- overwriting the default implementation. This is needed for basic types like
--- 'Int' and 'Char' that don't have useful generic representations. But it also
--- allows to overwrite instances for ADTs manually. For example you may want
--- a certain type to be serialized in a special way that deviates from the
+-- by overwriting the default implementation. This is needed for basic types
+-- like 'Int' and 'Char' that don't have useful generic representations. But it
+-- also allows us to overwrite instances for ADTs manually. For example you may
+-- want a certain type to be serialized in a special way that deviates from the
 -- generic implementation or you may implement an instance manually for
 -- performance gain.
