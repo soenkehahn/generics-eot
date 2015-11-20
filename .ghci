@@ -1,1 +1,1 @@
-:set -isrc -itest -iexamples
+:set -isrc -itest -iexamples -Wall -fno-warn-name-shadowing

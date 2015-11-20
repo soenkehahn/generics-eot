@@ -319,16 +319,19 @@ class EotCreateTableStatement meta eot where
 instance EotCreateTableStatement [String] fields =>
   EotCreateTableStatement Datatype (Either fields Void) where
 
-  eotCreateTableStatement (Datatype name [Constructor _ (Selectors fields)]) Proxy =
-    "CREATE TABLE " :
-    name :
-    " COLUMNS " :
-    "(" :
-    intercalate ", " (eotCreateTableStatement fields (Proxy :: Proxy fields)) :
-    ");" :
-    []
-  eotCreateTableStatement (Datatype _ [Constructor name (NoSelectors _)]) Proxy =
-    error ("constructor " ++ name ++ " has no selectors, this is not supported")
+  eotCreateTableStatement datatype Proxy = case datatype of
+    Datatype name [Constructor _ (Selectors fields)] ->
+      "CREATE TABLE " :
+      name :
+      " COLUMNS " :
+      "(" :
+      intercalate ", " (eotCreateTableStatement fields (Proxy :: Proxy fields)) :
+      ");" :
+      []
+    Datatype _ [Constructor name (NoSelectors _)] ->
+      error ("constructor " ++ name ++ " has no selectors, this is not supported")
+    Datatype name _ ->
+      error ("type " ++ name ++ " must have exactly one constructor")
 
 -- $ The second instance is responsible for creating the parts of the SQL
 -- statements that declare the columns. As such it has to traverse the fields
@@ -343,12 +346,14 @@ instance (Typeable x, EotCreateTableStatement [String] xs) =>
   eotCreateTableStatement (field : fields) Proxy =
     (field ++ " " ++ show (typeRep (Proxy :: Proxy x))) :
     eotCreateTableStatement fields (Proxy :: Proxy xs)
+  eotCreateTableStatement [] Proxy = error "impossible"
 
 -- $ The last instances is for @()@. It's needed as the base case for
 -- traversing the fields and as such returns just an empty list.
 
 instance EotCreateTableStatement [String] () where
   eotCreateTableStatement [] Proxy = []
+  eotCreateTableStatement (_ : _) Proxy = error "impossible"
 
 -- | 'createTableStatement' ties everything together. It obtaines the meta
 -- information through 'datatype' passing a proxy for @a@. And it creates a
