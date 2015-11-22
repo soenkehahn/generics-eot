@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           generics-eot
-version:        0.0.0
+version:        0.1
 build-type:     Simple
 cabal-version:  >= 1.10
 
