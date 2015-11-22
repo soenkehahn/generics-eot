@@ -1,5 +1,6 @@
 name: generics-eot
 version: "0.1"
+synopsis: A library for generic programming that aims to be easy to understand
 
 dependencies:
   - base
