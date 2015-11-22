@@ -3,6 +3,9 @@ name: generics-eot
 dependencies:
   - base
 
+extra-source-files:
+  - README.md
+
 ghc-options:
   "-Wall -fno-warn-name-shadowing"
 
