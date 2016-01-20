@@ -94,7 +94,8 @@ data B = B1 Int | B2 String Bool | B3
 
 -- $ would be mapped to
 -- @'Either' ('Int', ()) ('Either' ('String', ('Bool', ())) ('Either' () 'Void'))@.
--- (For the exact rules of this mapping see 'Eot'.)
+-- (For the exact rules of this mapping see here: 'Eot'.)
+--
 -- If we have an ADT @a@ then we can convert values of type @a@ to this
 -- isomorphic representation
 -- @'Eot' a@ with 'toEot' and we can convert in the other direction with
@@ -118,6 +119,7 @@ class EotSerialize eot where
     -> [Int] -- ^ A simple serialization format
 
 -- $ Now we need to write instances for the types that occur in eot types.
+-- (Please, look at the source code to see the instance implementations.)
 -- Usually these are:
 --
 -- - @'Either' this next@:
@@ -165,7 +167,7 @@ instance EotSerialize Void where
 --     but distinct type class called 'Serialize'.
 --
 --     The value of type @xs@ contains the remaining fields and will be encoded
---     recursively with 'EotSerialize'.
+--     recursively with 'eotSerialize'.
 
 instance (Serialize x, EotSerialize xs) => EotSerialize (x, xs) where
   eotSerialize n (x, xs) =
@@ -251,7 +253,8 @@ instance EotDeserialize () where
   eotDeserialize [] = ()
   eotDeserialize (_ : _) = error "invalid input"
 
--- $ And here's the 'Deserialize' plus all instances to deserialize the fields:
+-- $ And here's the 'Deserialize' class plus all instances to deserialize the
+-- fields:
 
 class Deserialize a where
   deserialize :: [Int] -> a
@@ -314,7 +317,7 @@ genericDeserialize = fromEot . eotDeserialize
 class EotCreateTableStatement meta eot where
   eotCreateTableStatement :: meta -> Proxy eot -> [String]
 
--- $ Our first instances is for the complete datatype. @eot@ is instantiated to
+-- $ Our first instance is for the complete datatype. @eot@ is instantiated to
 -- @'Either' fields 'Void'@. Note that this instance only works for ADTs with
 -- exactly one constructor as we don't support types with multiple constructors.
 -- @meta@ is instantiated to 'Datatype' which is the type for meta information
@@ -360,7 +363,7 @@ instance EotCreateTableStatement [String] () where
   eotCreateTableStatement (_ : _) Proxy = error "impossible"
 
 -- | 'createTableStatement' ties everything together. It obtaines the meta
--- information through 'datatype' passing a proxy for @a@. And it creates a
+-- information through 'datatype' passing a 'Proxy' for @a@. And it creates a
 -- 'Proxy' for the eot-type:
 --
 -- > Proxy :: Proxy (Eot a)
@@ -415,7 +418,7 @@ data NoSelectors
 -- In itself it has little to do with generic programming, but it makes a good
 -- companion.
 
--- ** How they work:
+-- ** How DefaultSignatures work:
 
 -- $ Imagine you have a type class called @ToString@ which allows to convert
 -- values to 'String's:
@@ -465,7 +468,7 @@ instance ToString Int
 -- $ Note: if you write down an empty @ToString@ instances for a type that
 -- does not have a 'Show' instance, the error message looks like this:
 --
--- > No instance for (Show noShow)
+-- > No instance for (Show NoShow)
 --
 -- This might be confusing especially since haddock docs don't list the default
 -- signatures or implementations and users of the class might be wondering why
