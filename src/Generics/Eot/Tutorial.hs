@@ -32,7 +32,7 @@ import           Data.Typeable
 
 import           Generics.Eot
 
--- * 1st Example: Meta Information Without Types: Field Names
+-- * #1stExample# 1st Example: Meta Information Without Types: Field Names
 
 -- | This simple function extracts the names of all field selectors and returns
 -- them as a list:
@@ -106,7 +106,7 @@ data B = B1 Int | B2 String Bool | B3
 -- These generic isomorphic types are referred to as "eot" -- short for
 -- "'Either's of tuples".
 
--- * 2nd Example: Deconstructing Values: Serialization
+-- * #2ndExample# 2nd Example: Deconstructing Values: Serialization
 
 -- $ We start by writing a function that operates on the eot representations.
 -- The eot representations follow simple patterns and always look similar, but
@@ -156,7 +156,7 @@ instance EotSerialize Void where
 -- - @(x, xs)@:
 --     Right-nested 2-tuples are used to encode all the fields for one specific
 --     constructor. So @x@ is the current field and @xs@ are the remaining
---     fields. To serialize this we serialize x (using 'serialize')
+--     fields. To serialize this we serialize @x@ (using 'serialize')
 --     and also write the length of the
 --     resulting list into the output. This will allow deserialization.
 --
@@ -216,17 +216,17 @@ genericSerialize = eotSerialize 0 . toEot
 -- >>> genericSerialize (A2 23 True)
 -- [1,1,23,1,1]
 
--- * 3rd Example: Constructing Values: Deserialization
+-- * #3rdExample# 3rd Example: Constructing Values: Deserialization
 
--- $ Deserialization works very similarly. It's just that the functions turn
+-- $ Deserialization works very similarly. It differs in that the functions turn
 -- lists of 'Int's into eot values.
 --
--- Here's the 'EotDeserialize' class with instances for
+-- Here's the 'EotDeserialize' class with instances for:
 --
---  - 'Either' this next
---  - 'Void'
---  - (x, xs)
---  - ()
+--  - @'Either' this next@
+--  - @'Void'@
+--  - @(x, xs)@
+--  - @()@
 
 class EotDeserialize eot where
   eotDeserialize :: [Int] -> eot
@@ -301,10 +301,10 @@ genericDeserialize = fromEot . eotDeserialize
 -- since we don't want actual values of our ADT as input or output we operate on
 -- 'Proxy's of our eot-types.
 --
--- As an example we're going to implement a function that creates SQL statements
--- that create tables that our ADTs would fit into. To be able to use nice names
--- for the table and columns we're going to traverse the type-less meta
--- information (see 1st example) at the same time.
+-- As an example we're going to implement a function that generates SQL
+-- statements that create tables that our ADTs would fit into. To be able to
+-- use nice names for the table and columns we're going to traverse the
+-- type-less meta information (see <#1stExample 1st example>) at the same time.
 --
 -- (Note that the generated SQL statements are targeted at a fictional
 -- database implementation that magically understands Haskell types like
@@ -413,8 +413,7 @@ data NoSelectors
 
 -- * DefaultSignatures
 
--- $ There is a ghc language extension called @DefaultSignatures@
--- (see https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-class-extensions.html#class-default-signatures ).
+-- $ There is a GHC language extension called @<https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-class-extensions.html#class-default-signatures DefaultSignatures>@.
 -- In itself it has little to do with generic programming, but it makes a good
 -- companion.
 
