@@ -29,7 +29,7 @@ import           Test.QuickCheck
 import           Generics.Eot
 
 spec :: Spec
-spec = modifyMaxSize (const 20) $ do
+spec = modifyMaxSize (const 20) $ modifyMaxSuccess (const 20) $ do
   describe "datatype" $ do
     it "works for every ADT" $ do
       property $ \ dt -> test dt [i|
