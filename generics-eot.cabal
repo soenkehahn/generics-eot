@@ -5,6 +5,11 @@
 name:           generics-eot
 version:        0.1
 synopsis:       A library for generic programming that aims to be easy to understand
+category:       Generics
+homepage:       https://github.com/soenkehahn/generics-eot#readme
+bug-reports:    https://github.com/soenkehahn/generics-eot/issues
+maintainer:     soenkehahn@gmail.com
+license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
@@ -12,12 +17,16 @@ cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
+source-repository head
+  type: git
+  location: https://github.com/soenkehahn/generics-eot
+
 library
   hs-source-dirs:
       src
   ghc-options: -Wall -fno-warn-name-shadowing
   build-depends:
-      base
+      base == 4.*
   exposed-modules:
       Generics.Eot
       Generics.Eot.Tutorial
@@ -35,7 +44,7 @@ test-suite spec
     , examples
   ghc-options: -Wall -fno-warn-name-shadowing
   build-depends:
-      base
+      base == 4.*
     , hspec
     , QuickCheck
     , interpolate
@@ -66,7 +75,7 @@ test-suite quickcheck
     , src
   ghc-options: -Wall -fno-warn-name-shadowing
   build-depends:
-      base
+      base == 4.*
     , hspec
     , mockery
     , interpolate
