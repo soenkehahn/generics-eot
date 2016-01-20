@@ -32,10 +32,3 @@ spec = do
             Constructor "D" (NoSelectors 1) :
             []
       datatype (Proxy :: Proxy TestType) `shouldBe` expected
-
-{-
-
-  describe "toString" $ do
-    it "works" $ do
-      toString tom `shouldBe` show tom
--}
