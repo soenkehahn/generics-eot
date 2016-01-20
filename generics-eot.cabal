@@ -1,10 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.5.4.
+-- This file has been generated from package.yaml by hpack version 0.8.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           generics-eot
 version:        0.1
 synopsis:       A library for generic programming that aims to be easy to understand
+license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
 
