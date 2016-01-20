@@ -8,7 +8,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | This tutorial is meant to be read alongside with the haddock comments in
--- 'Generics.Eot'.
+-- "Generics.Eot".
 --
 -- @generics-eot@ allows roughly three different kinds of operations:
 --

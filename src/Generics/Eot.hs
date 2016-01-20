@@ -6,6 +6,9 @@
 
 -- | @generics-eot@ tries to be a library for datatype generic programming
 -- that is easy to understand. "eot" stands for "eithers of tuples".
+--
+-- A tutorial on how to use @generics-eot@ can be found here:
+-- "Generics.Eot.Tutorial".
 module Generics.Eot (
   HasEot(..),
 
