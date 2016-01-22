@@ -209,15 +209,26 @@ instance EotSerialize () where
   eotSerialize _ () = []
 ```
 
-This is the class `Serialize`. It's used to serialize every field of the
-used ADTs, so we need instances for all of them:
+This is the class `Serialize`:
 
 ``` haskell
 class Serialize a where
   serialize :: a -> [Int]
-  default serialize :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
-  serialize = error "genericSerialize"
+```
 
+We give `serialize` a default implementation, but please ignore that for now.
+It'll be explained later in the section about
+[DefaultSignatures](#defaultsignatures):
+
+``` haskell
+  default serialize :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
+  serialize = genericSerialize
+```
+
+`Serialize` is used to serialize every field of the used ADTs, so we need
+instances for all of them:
+
+``` haskell
 instance Serialize Int where
   serialize i = [i]
 
@@ -488,8 +499,6 @@ values to `String`s:
 ``` haskell
 class ToString a where
   toString :: a -> String
-  default toString :: Show a => a -> String
-  toString = show
 ```
 
 You can write instances manually, but you might be tempted to give the
@@ -501,7 +510,8 @@ The idea is that then you can just write down an empty `ToString` instance:
 
     instance ToString A
 
-and you get to use `toString` on values of type `A` for free.
+and you get to use `toString` on values of type `A` for free, because `A` has
+a `Show` instance.
 
 But that default implementation doesn't work, because in the class declaration
 we don't have an instance for `Show a`. `ghc` says:
@@ -522,16 +532,16 @@ class ToString2 a where
   toString2 = show
 ```
 
-Then writing down empty instances work for types that have a `Show` instance:
+Then writing down empty instances works for types that have a `Show` instance:
 
 ``` haskell
-instance ToString Int
+instance ToString2 Int
 
--- $ >>> toString (42 :: Int)
+-- $ >>> toString2 (42 :: Int)
 -- "42"
 ```
 
-Note: if you write down an empty `ToString` instances for a type that
+Note: if you write down an empty `ToString2` instances for a type that
 does not have a `Show` instance, the error message looks like this:
 
     No instance for (Show NoShow)
@@ -543,22 +553,19 @@ signatures or implementations and users of the class might be wondering why
 ### How to use `DefaultSignatures` for generic programming
 
 `DefaultSignatures` are especially handy when doing generic programming.
-Remember the type class `Serialize` from the second example? Initially we
-used it to serialize the fields of our ADTs in the generic serialization
-through `genericSerialize` and `EotSerialize`. We just assumed that we would
-have a manual implementation for all field types. But with
-`DefaultSignatures` we can now give a default implementation that uses
+Remember the type class `Serialize` from the
+[second example](#nd-example-deconstructing-values-serialization)? In that
+example we used it to serialize the fields of our ADTs in the generic
+serialization through `genericSerialize` and `EotSerialize`. We just assumed
+that we would have a manual implementation for all field types. But we also
+gave it a default implementation for `serialize` in terms of
 `genericSerialize`:
 
-``` haskell
-class Serialize2 a where
-  serialize2 :: a -> [Int]
-  default serialize2 :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
-  serialize2 = genericSerialize
-```
+    default serialize :: (HasEot a, EotSerialize (Eot a)) => a -> [Int]
+    serialize = genericSerialize
 
-Note that the default implementation is given by `genericSerialize` and has
-the same constraints.
+Note that the default implementation has the same class constraints as
+`genericSerialize`.
 
 Now we can write empty instances for custom ADTs:
 
@@ -567,7 +574,7 @@ data C
   = C1 Int String
   deriving (Generic)
 
-instance Serialize2 C
+instance Serialize C
 ```
 
 You could say that by giving this empty instance we give our blessing to
@@ -575,7 +582,7 @@ use `genericSerialize` for this type, but we don't have to actually implement
 anything. And it works:
 
 ``` haskell
--- $ >>> serialize2 (C1 42 "yay!")
+-- $ >>> serialize (C1 42 "yay!")
 -- [0,1,42,4,121,97,121,33]
 ```
 
