@@ -1,2 +1,1 @@
 :set -isrc -itest -iexamples -Wall -fno-warn-name-shadowing
-:set -pgmL markdown-unlit
