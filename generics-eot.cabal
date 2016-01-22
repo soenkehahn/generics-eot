@@ -27,6 +27,7 @@ library
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       base == 4.*
+    , markdown-unlit
   exposed-modules:
       Generics.Eot
       Generics.Eot.Tutorial
@@ -45,6 +46,7 @@ test-suite spec
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       base == 4.*
+    , markdown-unlit
     , hspec
     , QuickCheck
     , interpolate
@@ -76,6 +78,7 @@ test-suite quickcheck
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       base == 4.*
+    , markdown-unlit
     , hspec
     , mockery
     , interpolate

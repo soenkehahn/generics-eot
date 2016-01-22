@@ -8,6 +8,7 @@ github: soenkehahn/generics-eot
 
 dependencies:
   - base == 4.*
+  - markdown-unlit
 
 extra-source-files:
   - README.md
