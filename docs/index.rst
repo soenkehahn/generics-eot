@@ -1,6 +1,10 @@
 generics-eot
 ============
 
+:code:`generics-eot` is a library for datatype generic programming that tries to be
+very simple to understand and use. It's heavily inspired by the awesome
+:code:`generics-sop` package (http://hackage.haskell.org/package/generics-sop).
+
 Links:
 ------
 
