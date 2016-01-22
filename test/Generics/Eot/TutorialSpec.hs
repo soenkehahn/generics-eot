@@ -9,4 +9,4 @@ import           Generics.Eot.Tutorial ()
 spec :: Spec
 spec = describe "tutorial" $ do
   it "doctests" $ do
-    doctest (words "src/Generics/Eot/Tutorial.hs -isrc")
+    doctest (words "src/Generics/Eot/Tutorial.lhs -isrc -pgmL markdown-unlit")

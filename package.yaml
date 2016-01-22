@@ -13,7 +13,8 @@ extra-source-files:
   - README.md
 
 ghc-options:
-  "-Wall -fno-warn-name-shadowing"
+  - "-Wall -fno-warn-name-shadowing"
+  - "-pgmL markdown-unlit"
 
 library:
   exposed-modules:
