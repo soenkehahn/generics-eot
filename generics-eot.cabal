@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           generics-eot
-version:        0.2
+version:        0.2.1
 synopsis:       A library for generic programming that aims to be easy to understand
 category:       Generics
 homepage:       https://github.com/soenkehahn/generics-eot#readme
