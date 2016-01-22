@@ -24,7 +24,12 @@
 -- requires both 'datatype' and
 -- 'toEot'.
 
+``` haskell
 module Generics.Eot.Tutorial where
+
+foo :: Integer
+foo = 42
+```
 
 import           Data.Char
 import           Data.List

@@ -21,6 +21,8 @@ library:
     - Generics.Eot.Tutorial
   source-dirs:
     - src
+  ghc-options:
+    "-pgmL markdown-unlit"
 
 tests:
   spec:
