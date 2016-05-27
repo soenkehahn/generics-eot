@@ -1,3 +1,4 @@
 docs/_build/
+docs/venv/
 dist/
 .stack-work/
