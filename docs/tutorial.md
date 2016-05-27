@@ -465,10 +465,10 @@ due to a missing instance:
 -- $ >>> putStrLn $ createTableStatement (Proxy :: Proxy A)
 -- <BLANKLINE>
 -- ...
---     No instance for (EotCreateTableStatement
---                        Datatype
---                        (Either ([Char], (Int, ())) (Either (Int, (Bool, ())) Void)))
---       arising from a use of ‘createTableStatement’
+--     • No instance for (EotCreateTableStatement
+--                          Datatype
+--                          (Either ([Char], (Int, ())) (Either (Int, (Bool, ())) Void)))
+--         arising from a use of ‘createTableStatement’
 -- ...
 ```
 
@@ -482,6 +482,7 @@ data NoSelectors
 
 -- $ >>> putStrLn $ createTableStatement (Proxy :: Proxy NoSelectors)
 -- *** Exception: constructor NotSupported has no selectors, this is not supported
+-- ...
 ```
 
 ## DefaultSignatures
