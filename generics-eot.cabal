@@ -1,9 +1,9 @@
--- This file has been generated from package.yaml by hpack version 0.8.0.
+-- This file has been generated from package.yaml by hpack version 0.13.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           generics-eot
-version:        0.2.1
+version:        0.2.1.1
 synopsis:       A library for generic programming that aims to be easy to understand
 category:       Generics
 homepage:       https://github.com/soenkehahn/generics-eot#readme
@@ -34,6 +34,32 @@ library
   other-modules:
       Generics.Eot.Datatype
       Generics.Eot.Eot
+      Paths_generics_eot
+  default-language: Haskell2010
+
+test-suite quickcheck
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test/quickcheck
+    , src
+  ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
+  build-depends:
+      base == 4.*
+    , markdown-unlit
+    , hspec
+    , mockery
+    , interpolate
+    , shake
+    , directory
+    , filepath
+    , QuickCheck
+  other-modules:
+      DatatypeSpec
+      Generics.Eot
+      Generics.Eot.Datatype
+      Generics.Eot.Eot
+      Generics.Eot.Tutorial
   default-language: Haskell2010
 
 test-suite spec
@@ -67,29 +93,4 @@ test-suite spec
       Docs
       MinBound
       ToString
-  default-language: Haskell2010
-
-test-suite quickcheck
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  hs-source-dirs:
-      test/quickcheck
-    , src
-  ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
-  build-depends:
-      base == 4.*
-    , markdown-unlit
-    , hspec
-    , mockery
-    , interpolate
-    , shake
-    , directory
-    , filepath
-    , QuickCheck
-  other-modules:
-      DatatypeSpec
-      Generics.Eot
-      Generics.Eot.Datatype
-      Generics.Eot.Eot
-      Generics.Eot.Tutorial
   default-language: Haskell2010
