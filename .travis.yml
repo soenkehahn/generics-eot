@@ -17,9 +17,9 @@ install:
   - stack --version
 
 script:
-  - stack setup
-  - stack build --ghc-options -Werror
-  - stack test --ghc-options -Werror
+  - stack setup --no-terminal
+  - stack build --ghc-options -Werror --no-terminal
+  - stack test --ghc-options -Werror --no-terminal
 
 
 cache:
