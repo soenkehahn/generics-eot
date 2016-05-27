@@ -7,6 +7,7 @@ addons:
 
 env:
   - STACK_YAML=stack.yaml
+  - STACK_YAML=stack-ghc-8.yaml
 
 install:
   # stack
