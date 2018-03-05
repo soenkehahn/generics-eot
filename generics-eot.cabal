@@ -1,4 +1,4 @@
--- This file has been generated from package.yaml by hpack version 0.13.0.
+-- This file has been generated from package.yaml by hpack version 0.18.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -28,6 +28,7 @@ library
   build-depends:
       base == 4.*
     , markdown-unlit
+    , void
   exposed-modules:
       Generics.Eot
       Generics.Eot.Tutorial
@@ -42,7 +43,7 @@ test-suite quickcheck
   main-is: Spec.hs
   hs-source-dirs:
       test/quickcheck
-    , src
+      src
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       base == 4.*
@@ -67,8 +68,8 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
-    , src
-    , examples
+      src
+      examples
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       base == 4.*
@@ -77,8 +78,10 @@ test-suite spec
     , QuickCheck
     , interpolate
     , doctest
+    , contravariant
   other-modules:
       Examples.CatamorphismsSpec
+      Examples.ContraSpec
       Examples.DocsSpec
       Examples.MinBoundSpec
       Examples.ToStringSpec
