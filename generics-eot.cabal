@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.13.0.
+-- This file has been generated from package.yaml by hpack version 0.27.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: be1d68fb3b3024af5f2df9483f57b698fac3236b91a5daab1989c22d015393e2
 
 name:           generics-eot
 version:        0.2.1.1
@@ -26,8 +28,9 @@ library
       src
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
-      base == 4.*
+      base ==4.*
     , markdown-unlit
+  build-tool-depends: markdown-unlit:markdown-unlit
   exposed-modules:
       Generics.Eot
       Generics.Eot.Tutorial
@@ -42,41 +45,43 @@ test-suite quickcheck
   main-is: Spec.hs
   hs-source-dirs:
       test/quickcheck
-    , src
+      src
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
-      base == 4.*
-    , markdown-unlit
-    , hspec
-    , mockery
-    , interpolate
-    , shake
+      QuickCheck
+    , base ==4.*
     , directory
     , filepath
-    , QuickCheck
+    , hspec
+    , interpolate
+    , markdown-unlit
+    , mockery
+    , shake
   other-modules:
       DatatypeSpec
       Generics.Eot
       Generics.Eot.Datatype
       Generics.Eot.Eot
       Generics.Eot.Tutorial
+      Paths_generics_eot
   default-language: Haskell2010
+  build-tool-depends: markdown-unlit:markdown-unlit, hspec-discover:hspec-discover
 
 test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs:
       test
-    , src
-    , examples
+      src
+      examples
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
-      base == 4.*
-    , markdown-unlit
-    , hspec
-    , QuickCheck
-    , interpolate
+      QuickCheck
+    , base ==4.*
     , doctest
+    , hspec
+    , interpolate
+    , markdown-unlit
   other-modules:
       Examples.CatamorphismsSpec
       Examples.DocsSpec
@@ -93,4 +98,6 @@ test-suite spec
       Docs
       MinBound
       ToString
+      Paths_generics_eot
   default-language: Haskell2010
+  build-tool-depends: markdown-unlit:markdown-unlit, hspec-discover:hspec-discover

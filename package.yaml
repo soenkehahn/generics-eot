@@ -23,6 +23,9 @@ library:
     - Generics.Eot.Tutorial
   source-dirs:
     - src
+  verbatim:
+    build-tool-depends:
+      "markdown-unlit:markdown-unlit"
 
 tests:
   spec:
@@ -36,6 +39,9 @@ tests:
       - QuickCheck
       - interpolate
       - doctest
+    verbatim:
+      build-tool-depends:
+        "markdown-unlit:markdown-unlit, hspec-discover:hspec-discover"
 
   quickcheck:
     main: Spec.hs
@@ -50,3 +56,6 @@ tests:
       - directory
       - filepath
       - QuickCheck
+    verbatim:
+      build-tool-depends:
+        "markdown-unlit:markdown-unlit, hspec-discover:hspec-discover"
