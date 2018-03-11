@@ -23,6 +23,8 @@ library:
     - Generics.Eot.Tutorial
   source-dirs:
     - src
+  dependencies:
+    - void
 
 tests:
   spec:
@@ -36,6 +38,7 @@ tests:
       - QuickCheck
       - interpolate
       - doctest
+      - contravariant
 
   quickcheck:
     main: Spec.hs
