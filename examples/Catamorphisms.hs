@@ -35,7 +35,7 @@ instance (Cata rest dest, Cons fields dest) =>
 instance Cata Void dest where
   type Typ Void dest = dest
   cata :: Void -> Proxy dest -> dest
-  cata void = seq void (error "impossible")
+  cata = absurd
   cataConst Proxy = id
 
 class Cons fields dest where
