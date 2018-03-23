@@ -169,11 +169,13 @@ instance (EotSerialize this, EotSerialize next) =>
 - `Void`:
   We need this instance to make the compiler happy, but it'll never be
   used. If you look at the type you can also see that: an argument of type
-  `Void` cannot be constructed.
+  `Void` cannot be constructed. (Often the function `Data.Void.absurd` comes in
+  handy for implementing these cases. `generics-eot` re-exports both the type
+  `Data.Void.Void` and `Data.Void.absurd` for convenience.)
 
 ``` haskell
 instance EotSerialize Void where
-  eotSerialize _ void = seq void $ error "impossible"
+  eotSerialize _n void = absurd void
 ```
 
 - `(x, xs)`:

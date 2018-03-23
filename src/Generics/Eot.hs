@@ -17,14 +17,15 @@ module Generics.Eot (
   Constructor(..),
   Fields(..),
 
-  -- * Void
-  Void,
   -- * Useful Re-exports
   Generic,
   Proxy(..),
+  Void,
+  absurd,
   ) where
 
 import           Data.Proxy
+import           Data.Void
 import           GHC.Exts (Constraint)
 import           GHC.Generics hiding (Datatype, Constructor)
 

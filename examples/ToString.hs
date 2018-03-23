@@ -46,7 +46,7 @@ instance (ToStringFields a, ToStringG b) => ToStringG (Either a b) where
   toStringConss [] _ = error "impossible"
 
 instance ToStringG Void where
-  toStringConss _ void = seq void (error "impossible")
+  toStringConss _ = absurd
 
 class ToStringFields a where
   toStringFields :: a -> [String]

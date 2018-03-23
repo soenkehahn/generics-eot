@@ -15,10 +15,10 @@
 
 module Generics.Eot.Eot (
   HasEotG(..),
-  Void,
   ) where
 
 import           Data.Proxy
+import           Data.Void
 import           GHC.Generics
 
 -- * datatype
@@ -55,20 +55,12 @@ instance HasFieldsG f => HasConstructorsG (C1 c f) where
   toEotConstructors = Left . toEotFields . unM1
   fromEotConstructors = \ case
     Left fields -> M1 $ fromEotFields fields
-    Right void -> seq void (error "impossible")
-
--- | Uninhabited type.
-data Void
-  deriving (Generic)
-
-deriving instance Show Void
-deriving instance Eq Void
-deriving instance Ord Void
+    Right void -> absurd void
 
 instance HasConstructorsG V1 where
   type Constructors V1 = Void
   toEotConstructors v1 = seq v1 (error "impossible")
-  fromEotConstructors void = seq void (error "impossible")
+  fromEotConstructors = absurd
 
 -- * GEither
 
@@ -92,7 +84,7 @@ instance Normalize b c => Normalize (Either a b) c where
 
 instance Normalize Void b where
   type GEither Void b = b
-  gLeft void Proxy = seq void (error "impossible")
+  gLeft void Proxy = absurd void
   gRight Proxy b = b
   gEither :: b -> Either Void b
   gEither = Right
