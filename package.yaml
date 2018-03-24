@@ -1,5 +1,5 @@
 name: generics-eot
-version: "0.2.1.2"
+version: "0.3"
 synopsis: A library for generic programming that aims to be easy to understand
 category: Generics
 maintainer: "soenkehahn@gmail.com"
