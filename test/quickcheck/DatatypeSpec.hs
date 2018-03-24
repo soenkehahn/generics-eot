@@ -50,6 +50,7 @@ spec = modifyMaxSize (const 20) $ modifyMaxSuccess (const 20) $ do
           {-# LANGUAGE DeriveGeneric #-}
           {-# LANGUAGE StandaloneDeriving #-}
 
+          import Prelude (Int, Show(..), (/=), ($), error, (++), unlines)
           import Generics.Eot
           import Control.Monad
 
