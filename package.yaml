@@ -5,6 +5,7 @@ category: Generics
 maintainer: "soenkehahn@gmail.com"
 license: BSD3
 github: soenkehahn/generics-eot
+homepage: https://generics-eot.readthedocs.io/en/latest/
 
 dependencies:
   - base >= 4.8
