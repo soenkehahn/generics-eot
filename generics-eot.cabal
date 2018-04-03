@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6df104be937df5ce9342be8c11c0bdc70083eb7364767d4abc3751ab800a2361
+-- hash: d1c8c40e3b6fb09f8c8356832917a18447d851e44919da9d050c8900a1d25945
 
 name:           generics-eot
 version:        0.3
@@ -57,6 +57,7 @@ test-suite quickcheck
     , markdown-unlit
     , mockery
     , shake
+    , silently
   other-modules:
       DatatypeSpec
       Generics.Eot
