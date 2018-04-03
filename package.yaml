@@ -56,6 +56,7 @@ tests:
       - directory
       - filepath
       - QuickCheck
+      - silently
     verbatim:
       build-tool-depends:
         "markdown-unlit:markdown-unlit, hspec-discover:hspec-discover"

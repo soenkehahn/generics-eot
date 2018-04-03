@@ -21,6 +21,7 @@ import           Development.Shake
 import           System.Directory
 import           System.Exit
 import           System.FilePath
+import           System.IO.Silently
 import           Test.Hspec hiding (Selector)
 import           Test.Hspec.QuickCheck
 import           Test.Mockery.Directory
@@ -31,7 +32,7 @@ import           Generics.Eot
 spec :: Spec
 spec = modifyMaxSize (const 20) $ modifyMaxSuccess (const 20) $ do
   describe "datatype" $ do
-    it "works for every ADT" $ do
+    around_ silence $ it "works for every ADT" $ do
       property $ \ dt -> test dt [i|
         {-# LANGUAGE DeriveGeneric #-}
 
