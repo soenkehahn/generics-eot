@@ -8,7 +8,7 @@
 -- that is easy to understand. "eot" stands for "eithers of tuples".
 --
 -- A tutorial on how to use @generics-eot@ can be found here:
--- http://generics-eot.readthedocs.org/en/latest/.
+-- https://generics-eot.readthedocs.io/.
 module Generics.Eot (
   HasEot(..),
 

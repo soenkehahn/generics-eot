@@ -12,7 +12,7 @@ Links:
 github:      https://github.com/soenkehahn/generics-eot
 hackage:     http://hackage.haskell.org/package/generics-eot
 stackage:    https://www.stackage.org/package/generics-eot
-readthedocs: http://generics-eot.readthedocs.org/en/latest/
+readthedocs: https://generics-eot.readthedocs.io/
 ============ ===============================================
 
 Tutorial:

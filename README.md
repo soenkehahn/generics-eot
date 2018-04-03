@@ -2,4 +2,4 @@
 very simple to understand and use. It's heavily inspired by the awesome
 [`generics-sop`](http://hackage.haskell.org/package/generics-sop) package.
 
-Documentation can be found here: http://generics-eot.readthedocs.org/en/latest/
+Documentation can be found here: https://generics-eot.readthedocs.io/
