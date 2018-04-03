@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d1c8c40e3b6fb09f8c8356832917a18447d851e44919da9d050c8900a1d25945
+-- hash: ae324f1957e8311278302c84f5017baa4364bf4acf699cc371bbbc377d0be047
 
 name:           generics-eot
 version:        0.3
@@ -28,7 +28,7 @@ library
       src
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
-      base ==4.*
+      base >=4.8
     , markdown-unlit
   build-tool-depends: markdown-unlit:markdown-unlit
   exposed-modules:
@@ -49,7 +49,7 @@ test-suite quickcheck
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       QuickCheck
-    , base ==4.*
+    , base >=4.8
     , directory
     , filepath
     , hspec
@@ -78,7 +78,7 @@ test-suite spec
   ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
   build-depends:
       QuickCheck
-    , base ==4.*
+    , base >=4.8
     , doctest
     , hspec
     , interpolate
