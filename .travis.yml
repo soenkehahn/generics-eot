@@ -6,8 +6,10 @@ addons:
       - libgmp-dev
 
 env:
+  - STACK_YAML=stack-ghc-7.10.yaml
+  - STACK_YAML=stack-ghc-8.0.yaml
+  - STACK_YAML=stack-ghc-8.2.yaml
   - STACK_YAML=stack.yaml
-  - STACK_YAML=stack-ghc-8.yaml
   - CABAL_NEW_BUILD=true
 
 install:
