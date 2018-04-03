@@ -1,6 +1,7 @@
 name: generics-eot
 version: "0.3"
 synopsis: A library for generic programming that aims to be easy to understand
+description: "Documentation is here: <https://generics-eot.readthedocs.io/en/latest/>"
 category: Generics
 maintainer: "soenkehahn@gmail.com"
 license: BSD3
