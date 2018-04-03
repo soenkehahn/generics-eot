@@ -2,11 +2,12 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ec6b6c48a72595796534109d14ee2c78ffb3743e435e2ffdc6147e7183299153
+-- hash: 8ff4d1fe12c8176bc099b7a2489b611e0d9be862b7126f4821fc0e48c465f68b
 
 name:           generics-eot
 version:        0.3
 synopsis:       A library for generic programming that aims to be easy to understand
+description:    Documentation is here: <https://generics-eot.readthedocs.io/en/latest/>
 category:       Generics
 homepage:       https://generics-eot.readthedocs.io/en/latest/
 bug-reports:    https://github.com/soenkehahn/generics-eot/issues
