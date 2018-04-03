@@ -13,11 +13,13 @@ spec :: Spec
 spec = describe "tutorial" $ do
 
   it "doctests" $ do
-    doctest (words "src/Generics/Eot/Tutorial.lhs -isrc -pgmL markdown-unlit")
+    doctest (words "test/Generics/Eot/Tutorial.lhs -isrc -pgmL markdown-unlit")
 
 #else
 
 import           Test.Hspec
+
+import           Generics.Eot.Tutorial ()
 
 spec :: Spec
 spec = return ()

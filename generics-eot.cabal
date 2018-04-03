@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 84a29444313cab35f99f48448498cc8ecf0a10ae0394459b8d1934744efe9cb0
+-- hash: c28dc95a6eb3c25e5edb673e6bfea22c933fdff4ae548f80804a576fb274ef2e
 
 name:           generics-eot
 version:        0.3
@@ -27,7 +27,6 @@ source-repository head
 library
   exposed-modules:
       Generics.Eot
-      Generics.Eot.Tutorial
   other-modules:
       Generics.Eot.Datatype
       Generics.Eot.Eot
@@ -49,7 +48,6 @@ test-suite quickcheck
       Generics.Eot
       Generics.Eot.Datatype
       Generics.Eot.Eot
-      Generics.Eot.Tutorial
       Paths_generics_eot
   hs-source-dirs:
       test/quickcheck
@@ -78,12 +76,12 @@ test-suite spec
       Examples.MinBoundSpec
       Examples.ToStringSpec
       Generics.DatatypeSpec
+      Generics.Eot.Tutorial
       Generics.Eot.TutorialSpec
       Generics.EotSpec
       Generics.Eot
       Generics.Eot.Datatype
       Generics.Eot.Eot
-      Generics.Eot.Tutorial
       Catamorphisms
       Docs
       MinBound

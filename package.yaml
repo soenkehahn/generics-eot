@@ -22,7 +22,6 @@ ghc-options:
 library:
   exposed-modules:
     - Generics.Eot
-    - Generics.Eot.Tutorial
   source-dirs:
     - src
   verbatim:
