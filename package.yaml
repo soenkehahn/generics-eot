@@ -7,7 +7,7 @@ license: BSD3
 github: soenkehahn/generics-eot
 
 dependencies:
-  - base == 4.*
+  - base >= 4.8
   - markdown-unlit
 
 extra-source-files:
