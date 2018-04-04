@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9858004c17b3c6e44e977e6a09f0970848c3d870c01cb74b32ae04a10b874cef
+-- hash: 897495206270fc128bfebb9334fcffb7918b93e0ba56d75764254e9d9653af76
 
 name:           generics-eot
 version:        0.4
@@ -33,12 +33,10 @@ library
       Paths_generics_eot
   hs-source-dirs:
       src
-  ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
+  ghc-options: -Wall -fno-warn-name-shadowing
   build-depends:
       base >=4.8
-    , markdown-unlit
   default-language: Haskell2010
-  build-tool-depends: markdown-unlit:markdown-unlit
 
 test-suite quickcheck
   type: exitcode-stdio-1.0
@@ -52,7 +50,7 @@ test-suite quickcheck
   hs-source-dirs:
       test/quickcheck
       src
-  ghc-options: -Wall -fno-warn-name-shadowing -pgmL markdown-unlit
+  ghc-options: -Wall -fno-warn-name-shadowing
   build-depends:
       QuickCheck
     , base >=4.8
@@ -60,12 +58,10 @@ test-suite quickcheck
     , filepath
     , hspec
     , interpolate
-    , markdown-unlit
     , mockery
     , shake
     , silently
   default-language: Haskell2010
-  build-tool-depends: markdown-unlit:markdown-unlit, hspec-discover:hspec-discover
 
 test-suite spec
   type: exitcode-stdio-1.0
@@ -100,4 +96,3 @@ test-suite spec
     , interpolate
     , markdown-unlit
   default-language: Haskell2010
-  build-tool-depends: markdown-unlit:markdown-unlit, hspec-discover:hspec-discover

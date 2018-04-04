@@ -10,23 +10,18 @@ homepage: https://generics-eot.readthedocs.io/
 
 dependencies:
   - base >= 4.8
-  - markdown-unlit
 
 extra-source-files:
   - README.md
 
 ghc-options:
   - "-Wall -fno-warn-name-shadowing"
-  - "-pgmL markdown-unlit"
 
 library:
   exposed-modules:
     - Generics.Eot
   source-dirs:
     - src
-  verbatim:
-    build-tool-depends:
-      "markdown-unlit:markdown-unlit"
 
 tests:
   spec:
@@ -40,9 +35,9 @@ tests:
       - QuickCheck
       - interpolate
       - doctest
-    verbatim:
-      build-tool-depends:
-        "markdown-unlit:markdown-unlit, hspec-discover:hspec-discover"
+      - markdown-unlit
+    ghc-options:
+      - "-pgmL markdown-unlit"
 
   quickcheck:
     main: Spec.hs
@@ -58,6 +53,3 @@ tests:
       - filepath
       - QuickCheck
       - silently
-    verbatim:
-      build-tool-depends:
-        "markdown-unlit:markdown-unlit, hspec-discover:hspec-discover"
