@@ -28,3 +28,4 @@ script:
 cache:
   directories:
     - $HOME/.stack
+  timeout: 1000
