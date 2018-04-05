@@ -9,7 +9,7 @@ github: soenkehahn/generics-eot
 homepage: https://generics-eot.readthedocs.io/
 
 dependencies:
-  - base >= 4.8
+  - base >= 4.8 && < 5
 
 extra-source-files:
   - README.md
