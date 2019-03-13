@@ -422,7 +422,7 @@ instance (Typeable x, EotCreateTableStatement [String] xs) =>
   eotCreateTableStatement [] Proxy = error "impossible"
 ```
 
-The last instances is for `()`. It's needed as the base case for
+The last instance is for `()`. It's needed as the base case for
 traversing the fields and as such returns just an empty list.
 
 ``` haskell
@@ -431,7 +431,7 @@ instance EotCreateTableStatement [String] () where
   eotCreateTableStatement (_ : _) Proxy = error "impossible"
 ```
 
-`createTableStatement` ties everything together. It obtaines the meta
+`createTableStatement` ties everything together. It obtains the meta
 information through `datatype` passing a `Proxy` for `a`. And it creates a
 `Proxy` for the eot-type `Proxy :: Proxy (Eot a)`. Then it calls
 `eotCreateTableStatement` and just `concat`s the resulting snippets.
