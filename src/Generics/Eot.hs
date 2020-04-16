@@ -11,6 +11,7 @@
 -- https://generics-eot.readthedocs.io/.
 module Generics.Eot (
   HasEot(..),
+  Named(..),
 
   -- * Meta Information
   Datatype(..),

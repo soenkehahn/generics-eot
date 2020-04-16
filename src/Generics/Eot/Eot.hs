@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -15,11 +16,13 @@
 
 module Generics.Eot.Eot (
   HasEotG(..),
+  Named(..)
   ) where
 
 import           Data.Proxy
 import           Data.Void
 import           GHC.Generics
+import           GHC.TypeLits
 
 -- * datatype
 
@@ -103,10 +106,18 @@ instance (HasFieldsG a, HasFieldsG b, Concat (Fields a) (Fields b)) =>
     fromEotFields x = case unConcat x of
       (a, b) -> fromEotFields a :*: fromEotFields b
 
-instance HasFieldsG (S1 c (Rec0 f)) where
-  type Fields (S1 c (Rec0 f)) = (f, ())
-  toEotFields (M1 (K1 x)) = (x, ())
-  fromEotFields (x, ()) = M1 $ K1 x
+data Named (a :: Symbol) field = Named field deriving Show
+data Unnamed field = Unnamed field deriving Show
+
+instance KnownSymbol name => HasFieldsG (S1 ('MetaSel ('Just name) x y z) (Rec0 f)) where
+  type Fields (S1 ('MetaSel ('Just name) x y z) (Rec0 f)) = (Named name f, ())
+  toEotFields (M1 (K1 x)) = (Named x, ())
+  fromEotFields (Named x, ()) = M1 $ K1 x
+
+instance HasFieldsG (S1 ('MetaSel 'Nothing x y z) (Rec0 f)) where
+  type Fields (S1 ('MetaSel 'Nothing x y z) (Rec0 f)) = (Unnamed f, ())
+  toEotFields (M1 (K1 x)) = (Unnamed x, ())
+  fromEotFields (Unnamed x, ()) = M1 $ K1 x
 
 instance HasFieldsG U1 where
   type Fields U1 = ()
