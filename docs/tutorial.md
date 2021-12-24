@@ -74,14 +74,34 @@ data A = A1 {
 -- ["foo","bar","baz"]
 ```
 
-## The `Generic` instance: Don't forget!!!
+## Common gotchas
+
+`ghc` tries to generate helpful error messages in case you get something
+wrong. Usually it does a decent job, and reading and understanding the error
+message points you in the right direction. There are some situations where that
+isn't the case and here are two of those when using `generics-eot`:
+
+### `MonoLocalBinds`
+
+Using generic functions in `let` or `where` blocks can at times lead to
+confusing error messages, e.g.:
+
+    • Couldn't match type ‘GHC.Generics.Rep a’
+               with ‘GHC.Generics.M1 GHC.Generics.D c0 f0’
+          arising from a use of ‘namesOfFields’
+      The type variables ‘c0’, ‘f0’ are ambiguous
+
+Enable the language extensions `{-# LANGUAGE MonoLocalBinds #-}` to work around
+that.
+
+### The `Generic` instance
 
 To be able to use generic functions that are written with `generics-eot` you
 need to derive an instance for `GHC.Generics.Generic` (using `DeriveGeneric`)
 for your ADTs. This will automatically give you an instance for `HasEot`.
 
 When the instance for `GHC.Generics.Generic` is missing the type error messages
-are unfortunately very confusing and unhelpful. They go something like this:
+might look like this:
 
     Couldn't match type ‘GHC.Generics.Rep WithoutGeneric’
                    with ‘GHC.Generics.D1 c f’
