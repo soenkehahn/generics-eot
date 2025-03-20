@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | @generics-eot@ tries to be a library for datatype generic programming
@@ -24,9 +25,9 @@ module Generics.Eot (
   absurd,
   ) where
 
+import           Data.Kind (Constraint, Type)
 import           Data.Proxy
 import           Data.Void
-import           GHC.Exts (Constraint)
 import           GHC.Generics hiding (Datatype, Constructor)
 
 import           Generics.Eot.Datatype
@@ -66,7 +67,7 @@ class HasEot a where
   -- These rules (and the end-markers) are necessary to make sure generic
   -- functions know exactly which parts of the generic representation are field
   -- types and which parts belong to the generic skeleton.
-  type Eot a :: *
+  type Eot a :: Type
 
   -- | Convert a value of type @a@ to its generic representation.
   toEot :: a -> Eot a

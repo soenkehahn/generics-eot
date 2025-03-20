@@ -468,9 +468,9 @@ due to a missing instance:
 -- $ >>> putStrLn $ createTableStatement (Proxy :: Proxy A)
 -- <BLANKLINE>
 -- ...
---     • No instance for (EotCreateTableStatement
+--     • No instance for ‘EotCreateTableStatement
 --                          Datatype
---                          (Either ([Char], (Int, ())) (Either (Int, (Bool, ())) Void)))
+--                          (Either ([Char], (Int, ())) (Either (Int, (Bool, ())) Void))’
 --         arising from a use of ‘createTableStatement’
 -- ...
 ```

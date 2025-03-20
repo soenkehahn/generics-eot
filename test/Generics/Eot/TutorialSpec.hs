@@ -2,7 +2,7 @@
 
 module Generics.Eot.TutorialSpec where
 
-#if MIN_VERSION_base(4,9,0)
+#if MIN_VERSION_base(4,18,0)
 
 import           Test.DocTest
 import           Test.Hspec

@@ -11,6 +11,7 @@
 
 module Generics.Eot.Datatype where
 
+import           Data.Kind
 import           Data.Maybe
 import           Data.Proxy
 import qualified GHC.Generics as GHC
@@ -45,7 +46,7 @@ data Fields
 
 -- * datatype
 
-class GenericDatatype (a :: * -> *) where
+class GenericDatatype (a :: Type -> Type) where
   datatypeC :: Proxy a -> Datatype
 
 instance (GHC.Datatype c, GenericConstructors f) =>
@@ -57,7 +58,7 @@ instance (GHC.Datatype c, GenericConstructors f) =>
 
 -- * constructors
 
-class GenericConstructors (a :: * -> *) where
+class GenericConstructors (a :: Type -> Type) where
   getConstructors :: Proxy a -> [Constructor]
 
 instance (GenericConstructors a, GenericConstructors b) =>
@@ -85,7 +86,7 @@ getFields proxy = case getFieldsC proxy of
   l@(Nothing : _) -> NoSelectors (length l)
   l@(Just _ : _) -> Selectors (catMaybes l)
 
-class GenericFields (a :: * -> *) where
+class GenericFields (a :: Type -> Type) where
   getFieldsC :: Proxy a -> [Maybe String]
 
 instance (GenericFields a, GenericFields b) =>

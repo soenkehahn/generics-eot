@@ -8,6 +8,7 @@
 
 module Catamorphisms where
 
+import           Data.Kind
 import           Generics.Eot
 
 catamorphism :: (HasEot a, Cata (Eot a) dest) =>
@@ -15,7 +16,7 @@ catamorphism :: (HasEot a, Cata (Eot a) dest) =>
 catamorphism a proxy = cata (toEot a) proxy
 
 class Cata eot dest where
-  type Typ eot dest :: *
+  type Typ eot dest :: Type
   cata :: eot -> Proxy dest -> Typ eot dest
   cataConst :: Proxy eot -> dest -> Typ eot dest
 
@@ -39,7 +40,7 @@ instance Cata Void dest where
   cataConst Proxy = id
 
 class Cons fields dest where
-  type ConsFunc fields dest :: *
+  type ConsFunc fields dest :: Type
   eotConsFunc :: ConsFunc fields dest -> fields -> dest
 
 instance Cons () dest where
