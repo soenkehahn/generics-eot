@@ -35,10 +35,11 @@
                   ];
               };
               ghcWithDeps = haskellPackages.ghc.withPackages (p: haskellPackage.buildInputs);
+              ghcName = lib.replaceStrings [ "." ] [ "-" ] haskellPackages.ghc.version;
             in
             {
-              packages."generics-eot_ghc-${lib.replaceStrings ["."] ["-"] haskellPackages.ghc.version}" = haskellPackage;
-              devShells."generics-eot_ghc-${lib.replaceStrings ["."] ["-"] haskellPackages.ghc.version}" = pkgs.mkShell {
+              packages."generics-eot_ghc-${ghcName}" = haskellPackage;
+              devShells."generics-eot_ghc-${ghcName}" = pkgs.mkShell {
                 buildInputs = [
                   ghcWithDeps
                   haskellPackages.hpack
