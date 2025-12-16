@@ -18,6 +18,10 @@
               ./LICENSE
             ];
           };
+          modifier = drv:
+            pkgs.haskell.lib.appendConfigureFlags drv [
+              "--ghc-option=-Werror"
+            ];
         };
         ghcWithDeps = pkgs.haskellPackages.ghc.withPackages (p: haskellPackage.buildInputs);
       in
