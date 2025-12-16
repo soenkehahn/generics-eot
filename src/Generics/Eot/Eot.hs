@@ -17,14 +17,15 @@ module Generics.Eot.Eot (
   HasEotG(..),
   ) where
 
+import           Data.Kind
 import           Data.Proxy
 import           Data.Void
 import           GHC.Generics
 
 -- * datatype
 
-class HasEotG (a :: * -> *) where
-  type EotG a :: *
+class HasEotG (a :: Type -> Type) where
+  type EotG a :: Type
   toEotG :: a x -> EotG a
   fromEotG :: EotG a -> a x
 
@@ -35,8 +36,8 @@ instance HasConstructorsG f => HasEotG (D1 c f) where
 
 -- * constructors
 
-class HasConstructorsG (a :: * -> *) where
-  type Constructors a :: *
+class HasConstructorsG (a :: Type -> Type) where
+  type Constructors a :: Type
   toEotConstructors :: a x -> Constructors a
   fromEotConstructors :: Constructors a -> a x
 
@@ -65,7 +66,7 @@ instance HasConstructorsG V1 where
 -- * GEither
 
 class Normalize a b where
-  type GEither a b :: *
+  type GEither a b :: Type
   gLeft :: a -> Proxy b -> GEither a b
   gRight :: Proxy a -> b -> GEither a b
   gEither :: GEither a b -> Either a b
@@ -91,8 +92,8 @@ instance Normalize Void b where
 
 -- * fields
 
-class HasFieldsG (a :: * -> *) where
-  type Fields a :: *
+class HasFieldsG (a :: Type -> Type) where
+  type Fields a :: Type
   toEotFields :: a x -> Fields a
   fromEotFields :: Fields a -> a x
 
@@ -116,7 +117,7 @@ instance HasFieldsG U1 where
 -- * heterogenous lists
 
 class Concat a b where
-  type a +++ b :: *
+  type a +++ b :: Type
   (+++) :: a -> b -> (a +++ b)
   unConcat :: (a +++ b) -> (a, b)
 
