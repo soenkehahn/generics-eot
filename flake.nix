@@ -6,38 +6,52 @@
       let
         pkgs = import nixpkgs { inherit system; };
         lib = nixpkgs.lib;
-        haskellPackage = pkgs.haskellPackages.developPackage {
-          root = lib.fileset.toSource {
-            root = ./.;
-            fileset = lib.fileset.unions [
-              ./generics-eot.cabal
-              ./src
-              ./test
-              ./examples
-              ./docs/tutorial.md
-              ./LICENSE
-            ];
-          };
-          modifier = drv:
-            pkgs.haskell.lib.appendConfigureFlags drv [
-              "--ghc-option=-Werror"
-            ];
-        };
-        ghcWithDeps = pkgs.haskellPackages.ghc.withPackages (p: haskellPackage.buildInputs);
       in
-      {
-        packages = {
-          default = haskellPackage;
-        };
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = [
-              ghcWithDeps
-              pkgs.haskellPackages.hpack
-              pkgs.cabal-install
-              pkgs.haskell-language-server
-            ];
-          };
-        };
-      });
+      lib.foldl' lib.recursiveUpdate { }
+        ([
+          {
+            packages.default = self.packages.${system}."generics-eot_ghc-9-12-2";
+            devShells.default = self.devShells.${system}."generics-eot_ghc-9-12-2";
+          }
+        ] ++
+        (lib.map
+          (haskellPackages:
+            let
+              haskellPackage = haskellPackages.developPackage {
+                root = lib.fileset.toSource {
+                  root = ./.;
+                  fileset = lib.fileset.unions [
+                    ./generics-eot.cabal
+                    ./src
+                    ./test
+                    ./examples
+                    ./docs/tutorial.md
+                    ./LICENSE
+                  ];
+                };
+                modifier = drv:
+                  pkgs.haskell.lib.appendConfigureFlags drv [
+                    "--ghc-option=-Werror"
+                  ];
+              };
+              ghcWithDeps = haskellPackages.ghc.withPackages (p: haskellPackage.buildInputs);
+            in
+            {
+              packages."generics-eot_ghc-${lib.replaceStrings ["."] ["-"] haskellPackages.ghc.version}" = haskellPackage;
+              devShells."generics-eot_ghc-${lib.replaceStrings ["."] ["-"] haskellPackages.ghc.version}" = pkgs.mkShell {
+                buildInputs = [
+                  ghcWithDeps
+                  haskellPackages.hpack
+                  haskellPackages.cabal-install
+                  haskellPackages.haskell-language-server
+                ];
+              };
+            })
+          [
+            pkgs.haskell.packages.ghc96
+            pkgs.haskell.packages.ghc98
+            pkgs.haskell.packages.ghc910
+            pkgs.haskell.packages.ghc912
+          ]
+        )));
 }
