@@ -1,13 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.38.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 50d659af680069ec9917ed6a35c1ca01a40f9e83cc751ac1801a407b1e7a0602
+-- hash: 61b1b8512afc75a1284a5d2b9a257971eb7121e996fc24221e1c3e6c2b6470a4
 
 name:           generics-eot
-version:        0.4.0.1
+version:        0.4.1.0
 synopsis:       A library for generic programming that aims to be easy to understand
 description:    Documentation is here: <https://generics-eot.readthedocs.io/>
 category:       Generics
